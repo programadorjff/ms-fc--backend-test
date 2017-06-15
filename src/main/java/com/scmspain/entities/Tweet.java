@@ -1,55 +1,79 @@
 package com.scmspain.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-public class Tweet {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @Column(nullable = false)
-    private String publisher;
-    @Column(nullable = false, length = 140)
-    private String tweet;
-    @Column (nullable=true)
-    private Long pre2015MigrationStatus = 0L;
+public class Tweet extends BaseEntity {
 
-    public Tweet() {
-    }
+	@Column(nullable = false)
+	private String publisher;
+	@Column(name = "body", nullable = false)
+	@JsonProperty("tweet")
+	private String body;
+	@Column(nullable = false, length = 140)
+	@JsonIgnore
+	private String bodyWithoutLinks;
+	@Column(nullable = true)
+	private Long pre2015MigrationStatus = 0L;
+	@Column(columnDefinition = "DATE DEFAULT CURRENT_DATE", nullable = true)
+	@JsonIgnore
+	private Date published;
+	@Column(nullable = true)
+	@JsonIgnore
+	private Date discarded;
 
-    public Long getId() {
-        return id;
-    }
+	public String getPublisher() {
+		return publisher;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
 
-    public String getPublisher() {
-        return publisher;
-    }
+	public String getBody() {
+		return body;
+	}
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+	public void setBody(String body) {
+		this.body = body;
+	}
 
-    public String getTweet() {
-        return tweet;
-    }
+	public String getBodyWithoutLinks() {
+		return bodyWithoutLinks;
+	}
 
-    public void setTweet(String tweet) {
-        this.tweet = tweet;
-    }
+	public void setBodyWithoutLinks(String bodyWithoutLinks) {
+		this.bodyWithoutLinks = bodyWithoutLinks;
+	}
 
-    public Long getPre2015MigrationStatus() {
-        return pre2015MigrationStatus;
-    }
+	public Long getPre2015MigrationStatus() {
+		return pre2015MigrationStatus;
+	}
 
-    public void setPre2015MigrationStatus(Long pre2015MigrationStatus) {
-        this.pre2015MigrationStatus = pre2015MigrationStatus;
-    }
+	public void setPre2015MigrationStatus(Long pre2015MigrationStatus) {
+		this.pre2015MigrationStatus = pre2015MigrationStatus;
+	}
+
+	public Date getPublished() {
+		return published;
+	}
+
+	public void setPublished(Date published) {
+		this.published = published;
+	}
+
+	public Date getDiscarded() {
+		return discarded;
+	}
+
+	public void setDiscarded(Date discarded) {
+		this.discarded = discarded;
+	}
 
 }

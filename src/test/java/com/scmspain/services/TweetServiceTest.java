@@ -1,38 +1,42 @@
 package com.scmspain.services;
 
-import com.scmspain.entities.Tweet;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.boot.actuate.metrics.writer.MetricWriter;
-
-import javax.persistence.EntityManager;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.boot.actuate.metrics.writer.MetricWriter;
+
+import com.scmspain.controller.command.PublishTweetCommand;
+import com.scmspain.daos.ITweetDAO;
+import com.scmspain.entities.Tweet;
+
 public class TweetServiceTest {
-    private EntityManager entityManager;
-    private MetricWriter metricWriter;
-    private TweetService tweetService;
 
-    @Before
-    public void setUp() throws Exception {
-        this.entityManager = mock(EntityManager.class);
-        this.metricWriter = mock(MetricWriter.class);
+	private ITweetDAO tweetDAO;
+	private ITweetService tweetService;
 
-        this.tweetService = new TweetService(entityManager, metricWriter);
-    }
+	@Before
+	public void setUp() {
+		this.tweetDAO = mock(ITweetDAO.class);
+		MetricWriter metricWriter = mock(MetricWriter.class);
+		this.tweetService = new TweetService(metricWriter, this.tweetDAO);
+	}
 
-    @Test
-    public void shouldInsertANewTweet() throws Exception {
-        tweetService.publishTweet("Guybrush Threepwood", "I am Guybrush Threepwood, mighty pirate.");
+	@Test
+	public void shouldInsertANewTweet() {
+		PublishTweetCommand publishTweetCommand = new PublishTweetCommand();
+		publishTweetCommand.setPublisher("Guybrush Threepwood");
+		publishTweetCommand.setTweet("I am Guybrush Threepwood, mighty pirate.");
+		this.tweetService.publishTweet(publishTweetCommand);
+		verify(this.tweetDAO).saveTweet(any(Tweet.class));
+	}
 
-        verify(entityManager).persist(any(Tweet.class));
-    }
+	@Test
+	public void shouldReturnZeroListAllTweetsPublished() {
+		assertThat(this.tweetService.listAllTweets().size()).isEqualTo(0);
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowAnExceptionWhenTweetLengthIsInvalid() throws Exception {
-        tweetService.publishTweet("Pirate", "LeChuck? He's the guy that went to the Governor's for dinner and never wanted to leave. He fell for her in a big way, but she told him to drop dead. So he did. Then things really got ugly.");
-    }
 }

@@ -1,22 +1,24 @@
 package com.scmspain.controller.command;
 
 public class PublishTweetCommand {
-    private String publisher;
-    private String tweet;
 
-    public String getPublisher() {
-        return publisher;
-    }
+	private String publisher;
+	private String tweet;
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+	public String getPublisher() {
+		return publisher;
+	}
 
-    public String getTweet() {
-        return tweet;
-    }
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
 
-    public void setTweet(String tweet) {
-        this.tweet = tweet;
-    }
+	public String getTweet() {
+		return tweet;
+	}
+
+	public void setTweet(String tweet) {
+		this.tweet = tweet;
+	}
+
 }
